@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TODOs List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+<style>
+.navbar{
+background-color: black!important;
+}
+</style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-black">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">TODOs List</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="#">About</a>
+            </li>
+          <!-- <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form> -->
+        </div>
+      </div>
+    </nav>
+
+<div class="container">
+
+<h2 class="text-center mt-3">TODOs List</h2>
+
+  <div class="mb-2">
+    <label for="title" class="form-label">TODO Title</label>
+    <input type="text" class="form-control" id="title" aria-describedby="emailHelp">
+  </div>
+
+ <div class="mb-3">
+  <label for="desc" class="form-label">TODO Description</label>
+  <textarea class="form-control" id="desc" rows="3"></textarea>
+ </div>
+
+  <div class="text-center mb-1">
+  <button type="submit" id="add" class="btn btn-success mx-5">Submit</button>
+  <button type="submit" id="clear" class="btn btn-danger" onclick="clearstorage()">Clear List</button>
+  </div>
+
+<div id="items" class="">
+
+<!-- <h2>Your Items</h2> -->
+
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col">SNO</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody id = "tableBody">
+    <tr>
+      <th scope="row">1</th>
+      <td>Get some Coffie</td>
+      <td>You need coffie</td>
+      <td><button class="btn">Edit</button></td>
+      <td><button class="btn">Delete</button></td>
+    </tr>
+
+
+  </tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="mb-3">
+          <label for="EditT" class="form-label">TODO Title</label>
+          <input type="text" class="form-control" id="EditT" aria-describedby="emailHelp">
+        </div>
+      
+       <div class="mb-3">
+        <label for="EditD" class="form-label">TODO Description</label>
+        <textarea class="form-control" id="EditD" rows="3"></textarea>
+       </div>
+<div class="text-center mb-1">
+       <button type="submit" id="update" class="btn btn-success text-center" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="EditUpdate()">Update</button>
+</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+</body>
+<script src="P3.js"></script>
+<script>
+
+function getAndpdate(){
+
+console.log("Submit");
+let tit = document.getElementById('title').value;
+let des = document.getElementById('desc').value;
+
+
+if(localStorage.getItem('itemsJson')==null){
+    itemsJsonArray=[];
+    itemsJsonArray.push([tit,des])
+    localStorage.setItem('itemsJson',JSON.stringify(itemsJsonArray))
+    title.value=``
+    desc.value=``
+}
+else{
+    itemsJsonArrayStr = localStorage.getItem('itemsJson');
+    itemsJsonArray = JSON.parse(itemsJsonArrayStr);
+    itemsJsonArray.push([tit,des]);
+    localStorage.setItem('itemsJson',JSON.stringify(itemsJsonArray))
+    title.value=``
+    desc.value=``
+}
+update();
+}
+function update(){
+
+if(localStorage.getItem('itemsJson')==null){
+    itemsJsonArray=[];
+    localStorage.setItem('itemsJson',JSON.stringify(itemsJsonArray))
+    title.value=``
+    desc.value=``
+}
+else{
+    itemsJsonArrayStr = localStorage.getItem('itemsJson');
+    itemsJsonArray = JSON.parse(itemsJsonArrayStr);
+    title.value=``
+    desc.value=``
+}
+
+// populate table 
+
+
+let tableBody=document.getElementById("tableBody");
+let str ="";
+itemsJsonArray.forEach((element,index) => {
+    str += `<tr>
+    <th scope="row">${index+1}</th>
+    <td>${element[0]}</td>
+    <td>${element[1]}</td>
+    <td><button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="Edited(${index})">Edit</button></td>
+    <td><button class="btn btn-danger btn-sm" onclick="deleted(${index})">Delete</button></td>
+  </tr>`; 
+})
+tableBody.innerHTML = str;
+
+}
+
+let add = document.getElementById("add");
+add.addEventListener("click",getAndpdate)
+update();
+
+function deleted(itemindex){
+if(confirm("Do you really want to Delete This Note ?")){
+console.log('delete item');
+itemsJsonArrayStr = localStorage.getItem('itemsJson');
+itemsJsonArray = JSON.parse(itemsJsonArrayStr);
+// delete itemindex from array
+itemsJsonArray.splice(itemindex,1);
+localStorage.setItem('itemsJson',JSON.stringify(itemsJsonArray))
+update();
+}
+}
+
+// let cleared = document.getElementById("clear");
+// cleared.addEventListener("click",()=>{ localStorage.clear() 
+// update();
+// })
+
+function clearstorage(){
+if(confirm("Do you really want to ClearList ?")){
+console.log('clear'); 
+localStorage.clear();
+update();
+}
+}
+let h ;
+let i ;
+// let C;
+// let D;
+
+function Edited(Index){
+
+let A=JSON.parse(itemsJsonArrayStr)
+console.log("Edit A = ")
+console.log(A)
+h = A;
+console.log(" let b = A[Index]")
+var b = A[Index]
+i=b;
+console.log(b);
+var c = A[Index][0];
+C=c;
+console.log(c);
+var d = A[Index][1];
+D=d;
+console.log(d)
+
+let EditT=document.getElementById('EditT');
+let EditD=document.getElementById('EditD');
+
+EditT.value=c
+EditD.value=d
+console.log(EditT,EditD)
+
+}
+
+function EditUpdate(){
+let A=JSON.parse(itemsJsonArrayStr)
+// console.log(h)
+let index = h.indexOf(i);
+// console.log(i)
+console.log(A[index]);
+
+let TitleEU=document.getElementById("EditT").value
+let DescEU=document.getElementById("EditD").value
+
+console.log(TitleEU,DescEU);
+
+A.splice(index,1,[TitleEU,DescEU]);
+localStorage.setItem('itemsJson',JSON.stringify(A))
+update();
+
+
+}
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+</html>
